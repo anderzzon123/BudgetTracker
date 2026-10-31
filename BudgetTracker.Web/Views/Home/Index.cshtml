@@ -1,0 +1,67 @@
+﻿@using BudgetTracker
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1>BudgetTracker</h1>
+
+    <p>Välkommen till min budgetapplikation!</p>
+
+    <h2>Mitt saldo: @ViewBag.Balance kr</h2>
+
+    <h2>Mina transaktioner</h2>
+
+    <table class="table">
+        <tr>
+            <th>Typ</th>
+            <th>Kategori</th>
+            <th>Belopp</th>
+            <th>Åtgärd</th>
+        </tr>
+
+        @foreach (Transaction transaction in ViewBag.Transactions)
+        {
+            <tr>
+                <td>@transaction.Type</td>
+                <td>@transaction.Category</td>
+                <td>@transaction.Amount kr</td>
+                <td>
+                    <form asp-controller="Home" asp-action="DeleteTransaction" method="post">
+                        <input type="hidden" name="id" value="@transaction.Id" />
+                        <button type="submit">Radera</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <h2>Lägg till transaktion</h2>
+
+
+    @if (TempData["Error"] != null)
+    {
+        <p style="color: red;">@TempData["Error"]</p>
+    }
+
+
+
+    <form asp-controller="Home" asp-action="AddTransaction" method="post"> <label>Typ:</label>
+        
+        <select name="type">
+            <option value="Income">Inkomst</option>
+            <option value="Expense">Utgift</option>
+
+
+        </select>
+
+        <label>Kategori:</label>
+        <input type="text" name="category">
+        
+        <label>Belopp:</label>
+        <input type="number" name="amount" step="0,01">
+
+        <button type="submit">Spara</button>
+    </form>
+</div>
