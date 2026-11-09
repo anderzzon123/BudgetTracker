@@ -1,0 +1,14 @@
+namespace BudgetTracker;
+
+public interface ITransactionRepository
+{
+    void SaveTransaction(Transaction transaction);
+
+    List<Transaction> GetAllTransactions();
+
+    void DeleteTransaction(int id);
+
+    void UpdateTransaction(int id, decimal amount, string newCategory, TransactionType newType);
+
+}
+

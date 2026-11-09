@@ -1,4 +1,9 @@
+using BudgetTracker;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<TransactionService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

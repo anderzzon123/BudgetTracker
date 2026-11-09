@@ -1,67 +1,164 @@
 ﻿@using BudgetTracker
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "BudgetTracker";
 }
 
-<div class="text-center">
-    <h1>BudgetTracker</h1>
+<div class="container py-5">
 
-    <p>Välkommen till min budgetapplikation!</p>
+    <div class="mb-4">
+        <h1 class="fw-bold">BudgetTracker</h1>
+        <p class="text-muted">Hantera dina inkomster och utgifter på ett enkelt sätt.</p>
+    </div>
 
-    <h2>Mitt saldo: @ViewBag.Balance kr</h2>
+    <!-- Saldo -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+            <p class="text-muted mb-2">Totalt saldo</p>
+            <h2 class="fw-bold mb-0">@ViewBag.Balance kr</h2>
+        </div>
+    </div>
 
-    <h2>Mina transaktioner</h2>
-
-    <table class="table">
-        <tr>
-            <th>Typ</th>
-            <th>Kategori</th>
-            <th>Belopp</th>
-            <th>Åtgärd</th>
-        </tr>
-
-        @foreach (Transaction transaction in ViewBag.Transactions)
-        {
-            <tr>
-                <td>@transaction.Type</td>
-                <td>@transaction.Category</td>
-                <td>@transaction.Amount kr</td>
-                <td>
-                    <form asp-controller="Home" asp-action="DeleteTransaction" method="post">
-                        <input type="hidden" name="id" value="@transaction.Id" />
-                        <button type="submit">Radera</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
-
-    <h2>Lägg till transaktion</h2>
-
-
+    <!-- Felmeddelande -->
     @if (TempData["Error"] != null)
     {
-        <p style="color: red;">@TempData["Error"]</p>
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
     }
 
+    <!-- Transaktioner -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
 
+            <h4 class="fw-bold mb-4">Mina transaktioner</h4>
 
-    <form asp-controller="Home" asp-action="AddTransaction" method="post"> <label>Typ:</label>
-        
-        <select name="type">
-            <option value="Income">Inkomst</option>
-            <option value="Expense">Utgift</option>
+            <div class="table-responsive">
+                <table class="table align-middle">
 
+                    <thead>
+                        <tr>
+                            <th>Typ</th>
+                            <th>Kategori</th>
+                            <th>Belopp</th>
+                            <th>Redigera transaktion</th>
+                            <th>Åtgärd</th>
+                        </tr>
+                    </thead>
 
-        </select>
+                    <tbody>
+                        @foreach (Transaction transaction in ViewBag.Transactions)
+                        {
+                            <tr>
+                                <td>
+                                    @if (transaction.Type == TransactionType.Income)
+                                    {
+                                        <span class="badge bg-success">Inkomst</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger">Utgift</span>
+                                    }
+                                </td>
 
-        <label>Kategori:</label>
-        <input type="text" name="category">
-        
-        <label>Belopp:</label>
-        <input type="number" name="amount" step="0,01">
+                                <td>@transaction.Category</td>
 
-        <button type="submit">Spara</button>
-    </form>
+                                <td class="fw-semibold">
+                                    @transaction.Amount kr
+                                </td>
+
+                                <td>
+                                    <form asp-controller="Home" asp-action="UpdateTransaction" method="post"
+                                          class="d-flex gap-2 align-items-center">
+
+                                        <input type="hidden" name="id" value="@transaction.Id" />
+
+                                        <select name="newType" class="form-select form-select-sm" style="min-width: 100px;">
+
+                                            <option value="Income" selected="@(transaction.Type == TransactionType.Income)">
+                                                Inkomst
+                                            </option>
+
+                                            <option value="Expense"
+                                                    selected="@(transaction.Type == TransactionType.Expense)">
+                                                Utgift
+                                            </option>
+
+                                        </select>
+
+                                        <input type="text" name="newCategory" value="@transaction.Category" required
+                                               class="form-control form-control-sm" style="min-width: 110px;" />
+
+                                        <input type="number" name="newAmount" value="@transaction.Amount" step="0.01"
+                                               min="0.01" required class="form-control form-control-sm"
+                                               style="min-width: 100px;" />
+
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                                            Uppdatera
+                                        </button>
+
+                                    </form>
+                                </td>
+
+                                <td>
+                                    <form asp-controller="Home" asp-action="DeleteTransaction" method="post">
+
+                                        <input type="hidden" name="id" value="@transaction.Id" />
+
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Radera
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lägg till transaktion -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+
+            <h4 class="fw-bold mb-4">Lägg till transaktion</h4>
+
+            <form asp-controller="Home" asp-action="AddTransaction" method="post">
+
+                <div class="row g-3">
+
+                    <div class="col-md-4">
+                        <label class="form-label">Typ</label>
+
+                        <select name="type" class="form-select">
+                            <option value="Income">Inkomst</option>
+                            <option value="Expense">Utgift</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Kategori</label>
+
+                        <input type="text" name="category" class="form-control" placeholder="Exempelvis Mat" required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Belopp</label>
+
+                        <input type="number" name="amount" step="0.01" min="0.01" class="form-control"
+                               placeholder="0.00" required />
+                    </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4">
+                    Spara transaktion
+                </button>
+
+            </form>
+        </div>
+    </div>
+
 </div>

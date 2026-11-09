@@ -7,21 +7,21 @@ namespace BudgetTracker.Web.Controllers;
 
 public class HomeController : Controller
 {
+
+    private readonly TransactionService service;
+
+    public HomeController(TransactionService service)
+    {
+        this.service = service;
+    }
+
     public IActionResult Index()
     {
-        TransactionRepository repository = new();
+        var transactions = service.GetAllTransactions();
 
-        var transactions = repository.GetAllTransactions();
 
-        BudgetManager manager = new();
-
-        foreach (Transaction transaction in transactions)
-        {
-            manager.AddTransaction(transaction);
-        }
-
-        ViewBag.Balance = manager.GetBalance();
         ViewBag.Transactions = transactions;
+        ViewBag.Balance = service.GetBalance();
 
         return View();
     }
@@ -42,9 +42,7 @@ public class HomeController : Controller
 
         Transaction transaction = new Transaction(0, type, amount, category);
 
-        TransactionRepository repository = new();
-
-        repository.SaveTransaction(transaction);
+        service.AddTransaction(transaction);
 
         return RedirectToAction("Index");
     }
@@ -53,9 +51,23 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult DeleteTransaction(int id)
     {
-        TransactionRepository repository = new();
-        repository.DeleteTransaction(id);
+        service.DeleteTransaction(id);
 
+        return RedirectToAction("Index");
+    }
+
+    [HttpPost]
+    public IActionResult UpdateTransaction(int id, decimal newAmount, string newCategory, TransactionType newType)
+    {
+        try
+        {
+            service.UpdateTransaction(id, newAmount, newCategory, newType);
+
+        }
+        catch (ArgumentException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
         return RedirectToAction("Index");
     }
 

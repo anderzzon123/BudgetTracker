@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 
 namespace BudgetTracker;
 
-public class TransactionRepository
+public class TransactionRepository : ITransactionRepository
 {
     private string connectionString = "Data Source=../budget.db";
 
@@ -71,17 +71,18 @@ public class TransactionRepository
         command.Parameters.AddWithValue("@id", id);
         command.ExecuteNonQuery();
     }
-    public void UpdateTransaction(int id, decimal newAmount)
+    public void UpdateTransaction(int id, decimal newAmount, string newCategory, TransactionType newType)
     {
         using SqliteConnection connection = new SqliteConnection(connectionString);
         connection.Open();
         using SqliteCommand command = connection.CreateCommand();
         command.CommandText =
-            "UPDATE Transactions SET Amount = @amount WHERE Id = @id";
+            "UPDATE Transactions SET Amount = @amount, Category = @category, Type = @type WHERE Id = @id";
 
         command.Parameters.AddWithValue("@id", id);
-        // command.Parameters.AddWithValue("@amount", decimal.ToInt64(transaction.Amount * 100));
         command.Parameters.AddWithValue("@amount", decimal.ToInt64(newAmount * 100));
+        command.Parameters.AddWithValue("@category", newCategory);
+        command.Parameters.AddWithValue("@type", newType.ToString());
         command.ExecuteNonQuery();
 
     }
