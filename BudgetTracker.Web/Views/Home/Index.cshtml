@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "BudgetTracker";
+    string? selectedType = Context.Request.Query["type"].ToString();
 }
 
 <div class="container py-5">
@@ -32,6 +33,26 @@
         <div class="card-body p-4">
 
             <h4 class="fw-bold mb-4">Mina transaktioner</h4>
+
+            <!-- Filtrera transaktioner -->
+            <form asp-controller="Home" asp-action="Index" method="get" class="d-flex gap-2 align-items-center mb-4">
+
+                <select name="type" class="form-select" style="max-width: 200px;">
+                    <option value="" selected="@(string.IsNullOrEmpty(selectedType))">
+                        Alla transaktioner
+                    </option>
+                    <option value="Income" selected="@(selectedType == "Income")">
+                        Inkomster
+                    </option>
+                    <option value="Expense" selected="@(selectedType == "Expense")">
+                        Utgifter
+                    </option>
+                </select>
+
+                <button type="submit" class="btn btn-primary">
+                    Filtrera
+                </button>
+            </form>
 
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -83,7 +104,6 @@
                                                     selected="@(transaction.Type == TransactionType.Expense)">
                                                 Utgift
                                             </option>
-
                                         </select>
 
                                         <input type="text" name="newCategory" value="@transaction.Category" required
@@ -96,7 +116,6 @@
                                         <button type="submit" class="btn btn-outline-primary btn-sm">
                                             Uppdatera
                                         </button>
-
                                     </form>
                                 </td>
 

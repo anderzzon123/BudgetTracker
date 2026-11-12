@@ -54,11 +54,12 @@ public class TransactionService
             {
                 balance -= transaction.Amount;
             }
-
         }
         return balance;
-
-
+    }
+    public List<Transaction> GetAllTransactionsByType(TransactionType type)
+    {
+        return repository.GetAllTransactionsByType(type);
     }
 
 }

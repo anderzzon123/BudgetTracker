@@ -6,6 +6,8 @@ public interface ITransactionRepository
 
     List<Transaction> GetAllTransactions();
 
+    List<Transaction> GetAllTransactionsByType(TransactionType type);
+
     void DeleteTransaction(int id);
 
     void UpdateTransaction(int id, decimal amount, string newCategory, TransactionType newType);

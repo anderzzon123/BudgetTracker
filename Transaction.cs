@@ -32,6 +32,26 @@ public class Transaction
         Amount = amount;
         Category = category;
         Date = date;
+    }
 
+
+    // metod för att uppdatera en transaktion
+    public void Update(decimal newPrice, string newCategory, TransactionType newType)
+    {
+        if (newPrice <= 0)
+        {
+            throw new ArgumentException("Beloppet måste vara större än 0");
+        }
+        if (string.IsNullOrWhiteSpace(newCategory))
+        {
+            throw new ArgumentException("Måste ha en kategori");
+        }
+        if (newType != TransactionType.Income && newType != TransactionType.Expense)
+        {
+            throw new ArgumentException("Ogiltlig transaktionstyp");
+        }
+        Amount = newPrice;
+        Category = newCategory;
+        Type = newType;
     }
 }

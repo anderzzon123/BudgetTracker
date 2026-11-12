@@ -1,12 +1,16 @@
 using BudgetTracker;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ITransactionRepository, EfTransactionRepository>();
 builder.Services.AddScoped<TransactionService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<BudgetDbContext>(options =>
+    options.UseSqlite("Data Source=../budget.db"));
 
 var app = builder.Build();
 

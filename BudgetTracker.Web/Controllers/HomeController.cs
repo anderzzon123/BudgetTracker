@@ -13,16 +13,25 @@ public class HomeController : Controller
     public HomeController(TransactionService service)
     {
         this.service = service;
+
     }
 
-    public IActionResult Index()
+    public IActionResult Index(string? type)
     {
-        var transactions = service.GetAllTransactions();
+        List<Transaction> transactions;
 
+        if (Enum.TryParse<TransactionType>(type, out var parsedType) &&
+    Enum.IsDefined(parsedType))
+        {
+            transactions = service.GetAllTransactionsByType(parsedType);
+        }
+        else
+        {
+            transactions = service.GetAllTransactions();
+        }
 
         ViewBag.Transactions = transactions;
         ViewBag.Balance = service.GetBalance();
-
         return View();
     }
     [HttpPost]
