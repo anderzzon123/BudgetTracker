@@ -36,5 +36,10 @@ public class FakeTransactionRepository : ITransactionRepository
 
         }
     }
+    public Transaction? GetTransactionById(int id)
+    {
+        Transaction? transaction = transactions.FirstOrDefault(t => t.Id == id);
+        return transaction;
+    }
 
 }

@@ -61,5 +61,9 @@ public class TransactionService
     {
         return repository.GetAllTransactionsByType(type);
     }
+    public Transaction? GetTransactionById(int id)
+    {
+        return repository.GetTransactionById(id);
+    }
 
 }

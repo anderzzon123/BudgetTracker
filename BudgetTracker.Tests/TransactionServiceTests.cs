@@ -54,6 +54,30 @@ public class TransactionServiceTests
         Assert.Equal(800m, t1.Amount);
         Assert.Equal("Transport", t1.Category);
     }
-
+    [Fact]
+    public void GetTransactionById_ExistingId_ReturnsTransaction()
+    {
+        FakeTransactionRepository repository = new();
+        TransactionService transactionService = new(repository);
+        Transaction t1 = new Transaction(1, TransactionType.Expense, 500, "Mat");
+        Transaction t2 = new Transaction(2, TransactionType.Expense, 800, "Mat");
+        transactionService.AddTransaction(t1);
+        transactionService.AddTransaction(t2);
+        Transaction? result = transactionService.GetTransactionById(2);
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Id);
+    }
+    [Fact]
+    public void GetTransactionById_NonExistingId_ReturnsNull()
+    {
+        FakeTransactionRepository repository = new();
+        TransactionService transactionService = new(repository);
+        Transaction t1 = new Transaction(1, TransactionType.Expense, 500, "Mat");
+        Transaction t2 = new Transaction(2, TransactionType.Expense, 800, "Mat");
+        transactionService.AddTransaction(t1);
+        transactionService.AddTransaction(t2);
+        Transaction? result = transactionService.GetTransactionById(999);
+        Assert.Null(result);
+    }
 
 }
