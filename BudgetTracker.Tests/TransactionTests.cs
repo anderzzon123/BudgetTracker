@@ -17,7 +17,7 @@ public class TransactionTests
     public void Constructor_ValidValues_CreatesTransaction()
     {
         Transaction t = new Transaction(1, TransactionType.Expense, 500, "Mat");
-        Assert.Equal(500m, t.Amount);
+        Assert.Equal(500m, t.Amount); 
         Assert.Equal("Mat", t.Category);
         Assert.Equal(TransactionType.Expense, t.Type);
 

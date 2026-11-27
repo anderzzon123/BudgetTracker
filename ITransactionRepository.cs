@@ -12,5 +12,6 @@ public interface ITransactionRepository
 
     void UpdateTransaction(int id, decimal amount, string newCategory, TransactionType newType);
 
+    Transaction? GetTransactionById(int id);
 }
 

@@ -42,4 +42,9 @@ public class EfTransactionRepository : ITransactionRepository
     {
         return context.Transactions.Where(t => t.Type == type).ToList();
     }
+    public Transaction? GetTransactionById(int id)
+    {
+        Transaction? transaction = context.Transactions.Find(id);
+        return transaction;
+    }
 }
